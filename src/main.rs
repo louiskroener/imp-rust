@@ -1,6 +1,5 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, fmt::Display};
 
-//TODO remove matches! with if let and match
 //TODO add error handling for Option types e.g if variable exisits in Valstate
 //TODO Implement fmt::Display for Val and Type and remove show_val and show_type
 //TODO Write better pretty methods
@@ -52,6 +51,15 @@ fn show_val(v: Val) -> String {
         Kind::Undefined => return "undefined".to_string(),
     }
 }
+impl Display for Val {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self.flag {
+            Kind::ValueInt => write!(f, "{}", self.val_i.unwrap()),
+            Kind::ValueBool => write!(f, "{}", self.val_b.unwrap()),
+            Kind::Undefined => write!(f, "{}", "undefined"),
+        }
+    }
+}
 #[derive(Clone, Copy, PartialEq)]
 enum Type {
     TyIllTyped,
@@ -59,12 +67,21 @@ enum Type {
     TyBool,
 }
 
-// TODO implement as fmt:Display
 fn show_type(t: Type) -> String {
     match t {
         Type::TyInt => return "int".to_string(),
         Type::TyBool => return "bool".to_string(),
         Type::TyIllTyped => return "Illtyped".to_string(),
+    }
+}
+
+impl Display for Type {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Type::TyInt => write!(f, "{}", "int"),
+            Type::TyBool => write!(f, "{}", "bool"),
+            Type::TyIllTyped => write!(f, "{}", "illtyped"),
+        }
     }
 }
 type ValState = HashMap<String, Val>;
@@ -484,7 +501,7 @@ impl Exp for Less {
         let n1 = self.exp[0].eval(s);
         let n2 = self.exp[1].eval(s);
         if let (Kind::ValueInt, Kind::ValueInt) = (n1.flag, n2.flag) {
-            return Val::mk_int(&(n1.val_i.unwrap() + n2.val_i.unwrap()));
+            return Val::mk_bool(&(n1.val_i.unwrap() < n2.val_i.unwrap()));
         }
         Val::mk_undefined()
     }
@@ -492,7 +509,7 @@ impl Exp for Less {
         let t1 = self.exp[0].infer(t);
         let t2 = self.exp[1].infer(t);
         if let (Type::TyInt, Type::TyInt) = (t1, t2) {
-            return Type::TyInt;
+            return Type::TyBool;
         }
         Type::TyIllTyped
     }
@@ -640,8 +657,8 @@ fn run_exp(e: Box<dyn Exp>) {
     let mut t = HashMap::<String, Type>::new();
     println!("*******");
     println!("{}", e.pretty());
-    println!("{}", show_val(e.eval(&mut s)));
-    println!("{}", show_type(e.infer(&mut t)));
+    println!("{}", e.eval(&mut s));
+    println!("{}", e.infer(&mut t));
 }
 fn run_stmt(stmt: Box<dyn Stmt>) {
     let mut s = HashMap::<String, Val>::new();
