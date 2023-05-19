@@ -5,8 +5,10 @@ pub mod interpreter;
 pub mod typechecker;
 use crate::interpreter::*;
 use crate::typechecker::*;
+
 //TODO add error handling for Option types e.g if variable exisits in Valstate
 //TODO Write better pretty methods
+//TODO replace Box<dyn Exp> with a generic Type, and make let Generic Type Implement Traits
 #[derive(PartialEq, Debug)]
 pub enum Kind {
     ValueInt,
@@ -90,7 +92,8 @@ impl Display for Type {
 }
 type ValState = HashMap<String, Val>;
 type TyState = HashMap<String, Type>;
-
+type _Exp = Box<dyn Exp>;
+type _Stmt = Box<dyn Stmt>;
 pub trait Exp {
     fn pretty(&self) -> String;
     fn eval(&self, s: &mut ValState) -> Val;
