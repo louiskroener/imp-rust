@@ -163,16 +163,6 @@ Stattdessen kann auch das Enum als Rückgabetyp / Parameter nutzen, und jeweils 
 Die Enum Variante wirkt wie eine Rust idiomatische Implementierung.
 
 
-
-### Links
-https://doc.rust-lang.org/book/ch10-02-traits.html  
-https://doc.rust-lang.org/std/keyword.dyn.html  
-https://doc.rust-lang.org/book/ch15-01-box.html  
-https://doc.rust-lang.org/book/ch06-01-defining-an-enum.html  
-https://doc.rust-lang.org/book/ch06-02-match.html  
-https://doc.rust-lang.org/book/ch06-03-if-let.html  
-
-
 [^1]: https://doc.rust-lang.org/book/ch10-02-traits.html
 [^2]: https://doc.rust-lang.org/std/keyword.dyn.html
 [^3]: https://doc.rust-lang.org/book/ch15-01-box.html
