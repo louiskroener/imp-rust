@@ -99,7 +99,7 @@ pub fn mult(x: Box<dyn Exp>, y: Box<dyn Exp>) -> Box<dyn Exp> {
 
 ### Generics
 Die Generics Lösung ist gleich wie die Go Model Lösung strukturiert.
-Am `Trait` ändert sich nichts, aber anstatt einen abstrakten Datentypen zu nutzen, werden Generics genutzt. 
+Am `Trait` ändert sich nichts, aber anstatt eines abstrakten Datentyps, werden Generics genutzt. 
 ```Rust
 
 pub struct Mult<T1: Exp, T2: Exp> {
