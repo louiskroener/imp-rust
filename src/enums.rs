@@ -130,7 +130,7 @@ pub enum Stmt {
 }
 impl Exp {
     fn eval(&self, s: &mut ValState) -> Val {
-        match &self {
+        match self {
             Exp::Var { name } => {
                 let x = s.get(name).unwrap();
                 match x.flag {
