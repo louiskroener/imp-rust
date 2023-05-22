@@ -1,6 +1,8 @@
 # imp-rust
 basiert auf https://sulzmann.github.io/ModelBasedSW/imp.html#(1)
-## Imp Rust
+## Imp
+Imp ist eine einfache Sprache, die Arithmetik auf int und bool unterstützt.
+Außerdem sind grundlegende Kontrollflussmechanismen unterstützt
 
 ## Ziele
 
@@ -13,7 +15,7 @@ Dabei sollen verschiedene Ansätze ausprobiert werden, dass in Rust zu realisier
 
 Beim "Go Model" geht es darum die Interfaces und Overloading aus Go in Rust zu übersetzten.  
 In der Go Implementierung wird ein Interface als abstrakter Datentyp genutzt.
-```
+```Go
 type Exp interface {
     pretty() string
     eval(s ValState) Val
@@ -22,13 +24,12 @@ type Exp interface {
 ```
 
 Dieses Interface kann dann auf Typen implementiert werden
-```
+```Go
 type Num int
 type Mult [2]Exp
 ```
 
-```
-
+```Go
 func (x Num) eval(s ValState) Val {
     return mkInt((int)(x))
 }
@@ -49,14 +50,14 @@ func (e Mult) pretty() string {
 Das Interface kann anschließend als (abstrakter) Typ genutzt werden.  
 Hier ein Beispiel aus den Hilfsfunktionen:
 
-```
+```Rust
 func and(x, y Exp) Exp {
     return (And)([2]Exp{x, y})
 }
 ```
 
 Das Interface kann mit Hilfe von  `Traits`[^1] implementiert werden
-```
+```Rust
 pub trait Exp {
     fn pretty(&self) -> String;
     fn eval(&self, s: &mut ValState) -> Val;
@@ -64,14 +65,14 @@ pub trait Exp {
 }
 ```
 Die Structs und Typen funktionieren in Rust ähnlich.
-```
+```Rust
 pub type Num = i32;
 pub struct Mult {
     pub exp: [Box<dyn Exp>; 2],
 }
 ```
 In Rust wird nun das `Trait` nun komplett für ein Typ implementiert
-```
+```Rust
 impl Exp for Mult {
     fn pretty(&self) -> String {
         .. code
@@ -85,15 +86,15 @@ impl Exp for Mult {
 }
 ```
 In Rust kann das Trait nicht direkt als Typ genutzt werden. In Rust muss noch das Keyword `dyn`[^2] genutzt werden
-```
+```Rust
 dyn Exp
 ```
 Außerdem müssen wir Rust noch mitteilen, dass wir die Objekte auf dem Heap speichern wollen, da die Datenstrukturen rekursiv sind. Dazu nutzen wir `Box`[^3]
-```
+```Rust
 Box<dyn Exp>
 ```
 Zusammengesetzt in der Hilfsfunktion: 
-```
+```Rust
 pub fn mult(x: Box<dyn Exp>, y: Box<dyn Exp>) -> Box<dyn Exp> {
     Box::new(Mult { exp: [x, y] })
 }
@@ -103,7 +104,7 @@ pub fn mult(x: Box<dyn Exp>, y: Box<dyn Exp>) -> Box<dyn Exp> {
 ### Generics
 Die Generics Lösung ist gleich wie die Go Model Lösung strukturiert.
 Am `Trait` ändert sich nichts, aber anstatt einen abstrakten Datentypen zu nutzen, werden Generics genutzt. 
-```
+```Rust
 
 pub struct Mult<T1: Exp, T2: Exp> {
     pub left: Box<T1>,
@@ -131,7 +132,7 @@ Zu beachten ist, dass hier das Struct selbst als Rückgabewert definiert, nicht 
 
 Das Enum Model kopiert nun nicht mehr das Go Model.
 Anstatt des abstrakten Datentyps wird ein `Enum`[^4]genutzt.
-```
+```Rust
 pub enum Exp {
     Num { val: i32 },
     Mult { left: Box<Exp>, right: Box<Exp> },
@@ -143,7 +144,7 @@ pub enum Exp {
 Die Funktionen werden nun an das Enum gebunden. Mit 
 `match`[^5] kann zwischen den Varianten des Enums unterschieden werden.
  
-```
+```Rust
 impl Exp {
     fn eval(&self, s: &mut ValState) -> Val {
         match &self {
@@ -154,7 +155,7 @@ impl Exp {
                         ..code 
                 }
         }
-        .. 
+        .. code
 ```
 Ein Problem bist, dass eine Enum Variante nicht direkt als Typ genutzt werden kann. Man kann es mit Structs umgehen, wie in diesem [Beispiel](https://stackoverflow.com/questions/29088633/grouping-structs-with-enums).  
 Aber dadurch verlieren wir wieder unsere Enum Abstraktion und müssten wieder Methoden für die Structs definieren.  
