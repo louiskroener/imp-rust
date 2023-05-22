@@ -30,20 +30,16 @@ type Mult [2]Exp
 ```
 
 ```Go
-func (x Num) eval(s ValState) Val {
-    return mkInt((int)(x))
+func (e Mult) eval(s ValState) Val {
+        .. code
 }
 
 func (e Mult) pretty() string {
+        .. code
+}
 
-    var x string
-    x = "("
-    x += e[0].pretty()
-    x += "*"
-    x += e[1].pretty()
-    x += ")"
-
-    return x
+func (e Mult) infer(t TyState) Type {
+        .. code
 }
 ```
 
