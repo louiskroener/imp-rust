@@ -55,7 +55,7 @@ func and(x, y Exp) Exp {
 }
 ```
 
-Das Interface kann mit Hilfe von  ` Traits ` implementiert werden
+Das Interface kann mit Hilfe von  `Traits`[^1] implementiert werden
 ```
 pub trait Exp {
     fn pretty(&self) -> String;
@@ -70,7 +70,7 @@ pub struct Mult {
     pub exp: [Box<dyn Exp>; 2],
 }
 ```
-In Rust wird nun das `Trait`[^1] nun komplett für ein Typ implementiert
+In Rust wird nun das `Trait` nun komplett für ein Typ implementiert
 ```
 impl Exp for Mult {
     fn pretty(&self) -> String {
@@ -88,7 +88,7 @@ In Rust kann das Trait nicht direkt als Typ genutzt werden. In Rust muss noch da
 ```
 dyn Exp
 ```
-Außerdem müssen wir Rust noch mitteilen, dass wir die Objekte auf dem Heap speichern wollen, da die Datenstrukturen rekursiv sind. Dazu nutzen wir `Box`[^2]
+Außerdem müssen wir Rust noch mitteilen, dass wir die Objekte auf dem Heap speichern wollen, da die Datenstrukturen rekursiv sind. Dazu nutzen wir `Box`[^3]
 ```
 Box<dyn Exp>
 ```
@@ -141,7 +141,7 @@ pub enum Exp {
 ```
 `Box` wird weiterhin als Smart Pointer genutzt.  
 Die Funktionen werden nun an das Enum gebunden. Mit 
-`match`[^4] kann zwischen den Varianten des Enums unterschieden werden.
+`match`[^5] kann zwischen den Varianten des Enums unterschieden werden.
  
 ```
 impl Exp {
@@ -158,7 +158,7 @@ impl Exp {
 ```
 Ein Problem bist, dass eine Enum Variante nicht direkt als Typ genutzt werden kann. Man kann es mit Structs umgehen, wie in diesem [Beispiel](https://stackoverflow.com/questions/29088633/grouping-structs-with-enums).  
 Aber dadurch verlieren wir wieder unsere Enum Abstraktion und müssten wieder Methoden für die Structs definieren.  
-Stattdessen kann auch das Enum als Rückgabetyp / Parameter nutzen, und jeweils eine Überprüfung auf die Variante einbauen. Dazu kann man wieder `match` oder `if let`[^5] nutzen
+Stattdessen kann auch das Enum als Rückgabetyp / Parameter nutzen, und jeweils eine Überprüfung auf die Variante einbauen. Dazu kann man wieder `match` oder `if let`[^6] nutzen
 Die Enum Variante wirkt wie eine Rust idiomatische Implementierung.
 
 
