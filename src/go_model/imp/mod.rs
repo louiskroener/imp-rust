@@ -2,9 +2,6 @@ use std::collections::HashMap;
 use std::fmt::Display;
 
 pub mod interpreter;
-pub mod typechecker;
-use crate::interpreter::*;
-use crate::typechecker::*;
 
 //TODO add error handling for Option types e.g if variable exisits in Valstate
 //TODO Write better pretty methods
@@ -92,18 +89,10 @@ impl Display for Type {
 }
 type ValState = HashMap<String, Val>;
 type TyState = HashMap<String, Type>;
-type _Exp = Box<dyn Exp>;
-type _Stmt = Box<dyn Stmt>;
 pub trait Exp {
     fn pretty(&self) -> String;
     fn eval(&self, s: &mut ValState) -> Val;
     fn infer(&self, t: &mut TyState) -> Type;
-}
-pub trait Prettier {
-    fn pretty(&self) -> String;
-}
-pub trait Interpreter {
-    fn eval(&self, s: &mut ValState) -> Val;
 }
 
 pub trait Stmt {
@@ -162,18 +151,3 @@ pub struct Neg {
 pub struct Grp {
     pub exp: Box<dyn Exp>,
 }
-//Enum Approach
-/*
-enum Exp {
-    Bool { val: bool },
-    Num { val: i32 },
-    Plus { left: Box<Exp>, right: Box<Exp> },
-    Mult { left: Box<Exp>, right: Box<Exp> },
-    And { left: Box<Exp>, right: Box<Exp> },
-    Or { left: Box<Exp>, right: Box<Exp> },
-    Var { val: String },
-    Neg { exp: Box<Exp> },
-    Equ { left: Box<Exp>, right: Box<Exp> },
-    Less { left: Box<Exp>, right: Box<Exp> },
-    Grp { exp: Box<Exp> },
-} */

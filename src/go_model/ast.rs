@@ -1,4 +1,4 @@
-use crate::imp::*;
+use crate::go_model::imp::*;
 pub fn number(x: i32) -> Box<dyn Exp> {
     let y: Num = x;
     return Box::new(y);
